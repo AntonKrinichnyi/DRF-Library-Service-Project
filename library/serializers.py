@@ -21,7 +21,7 @@ class BookSerializer(serializers.ModelSerializer):
                   "daily_fee")
 
 
-class BorrowingSerializer(serializers.Serializer):
+class BorrowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
         fields = ("id",
@@ -31,3 +31,13 @@ class BorrowingSerializer(serializers.Serializer):
                   "user")
 
 
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ("id",
+                  "status",
+                  "payment_type",
+                  "borrowing_id",
+                  "session_url",
+                  "session_id",
+                  "money_to_pay")
