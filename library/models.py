@@ -21,8 +21,8 @@ class Book(models.Model):
     title = models.CharField(max_length=255, unique=True)
     authors = models.ManyToManyField(Author)
     cover = models.CharField(max_length=10, choices=CoverChoises)
-    inventory = models.IntegerField(min=0)
-    daily_fee = models.DecimalField(max_digits=2, min=0)
+    inventory = models.IntegerField()
+    daily_fee = models.DecimalField(max_digits=2)
     
     def __str__(self):
         return self.title
