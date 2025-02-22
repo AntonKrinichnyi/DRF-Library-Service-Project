@@ -16,7 +16,7 @@ class Book(models.Model):
         SOFT = "Soft"
         
     title = models.CharField(max_length=255, unique=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ManyToManyField(Author)
     cover = models.CharField(max_length=10, choices=CoverChoises)
     inventory = models.IntegerField(min=0)
     daily_fee = models.DecimalField(max_digits=2, min=0)
