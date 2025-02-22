@@ -17,3 +17,16 @@ class AuthorViewSet(mixins.CreateModelMixin,
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
+
+class BorowwingViewSet(mixins.ListModelMixin,
+                       mixins.RetrieveModelMixin,
+                       mixins.CreateModelMixin,
+                       viewsets.GenericViewSet):
+    queryset = Borrowing.objects.all()
+    serializer_class = BorrowingSerializer
+
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment
+    serializer_class = BorrowingSerializer
