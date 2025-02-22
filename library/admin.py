@@ -1,3 +1,8 @@
 from django.contrib import admin
+from library.models import Book, Author, Borrowing, Payment
 
-# Register your models here.
+
+admin.site.register(Book)
+admin.site.register(Author)
+admin.site.register(Borrowing)
+admin.site.register(Payment)

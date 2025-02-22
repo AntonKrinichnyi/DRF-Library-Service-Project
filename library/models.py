@@ -33,3 +33,29 @@ class Borrowing(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
+    
+    def __str__(self):
+        return f"{self.user.email} borrow by {self.borrow_date}"
+
+
+class Payment(models.Model):
+    class StatusChoises(models.TextChoices):
+        PENDING = "Pending"
+        PAID = "Paid"
+    
+    class TypeChoises(models.TextChoices):
+        PAYMENT = "Payment"
+        FINE = "Fine"
+    
+    status = models.CharField(
+        choices=StatusChoises,
+        max_length=15
+    )
+    payment_type = models.CharField(
+        choices=TypeChoises,
+        max_length=15
+    )
+    borrowing_id = models.ForeignKey(Borrowing, on_delete=models.CASCADE)
+    session_url = models.URLField()
+    session_id = models.IntegerField()
+    money_to_pay = models.DecimalField(max_digits=2)
