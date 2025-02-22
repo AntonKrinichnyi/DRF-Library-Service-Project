@@ -1,5 +1,4 @@
 from django.db import models
-
 from library_service import settings
 
 
@@ -16,7 +15,7 @@ class Book(models.Model):
         SOFT = "Soft"
         
     title = models.CharField(max_length=255, unique=True)
-    author = models.ManyToManyField(Author)
+    authors = models.ManyToManyField(Author)
     cover = models.CharField(max_length=10, choices=CoverChoises)
     inventory = models.IntegerField(min=0)
     daily_fee = models.DecimalField(max_digits=2, min=0)
@@ -28,7 +27,9 @@ class Book(models.Model):
 class Borrowing(models.Model):
     borrow_date = models.DateTimeField(auto_now_add=True)
     expected_return_date = models.DateTimeField()
-    actual_return_date = models.DateTimeField()
+    actual_return_date = models.DateTimeField(auto_now_add=True,
+                                              blank=True,
+                                              null=True)
     book = models.ManyToManyField(Book)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
