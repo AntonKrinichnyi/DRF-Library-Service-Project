@@ -9,7 +9,10 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    authors = AuthorSerializer(many=True, read_only=True)
+    authors = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="full_name")
 
     class Meta:
         model = Book
