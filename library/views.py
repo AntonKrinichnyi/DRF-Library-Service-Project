@@ -19,7 +19,7 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
 
 
-class BorowwingViewSet(mixins.ListModelMixin,
+class BorrowingViewSet(mixins.ListModelMixin,
                        mixins.RetrieveModelMixin,
                        mixins.CreateModelMixin,
                        viewsets.GenericViewSet):
