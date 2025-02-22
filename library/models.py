@@ -1,5 +1,7 @@
 from django.db import models
 
+from library_service import settings
+
 
 class Author(models.Model):
     first_name = models.CharField(max_length=155)
@@ -21,3 +23,13 @@ class Book(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class Borrowing(models.Model):
+    borrow_date = models.DateTimeField(auto_now_add=True)
+    expected_return_date = models.DateTimeField()
+    actual_return_date = models.DateTimeField()
+    book = models.ManyToManyField(Book)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
