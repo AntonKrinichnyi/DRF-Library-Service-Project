@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from library.models import Author, Book, Borrowing, Payment
-from library.serializers import (AuthorSerializer,
+from library.serializers import (AuthorSerializer, BookListSerializer,
                                  BookSerializer,
                                  BorrowingSerializer,
                                  Payment)
@@ -15,8 +15,13 @@ class AuthorViewSet(mixins.CreateModelMixin,
 
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().prefetch_related("authors")
     serializer_class = BookSerializer
+    
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return BookListSerializer
+        return BookSerializer
 
 
 class BorrowingViewSet(mixins.ListModelMixin,
