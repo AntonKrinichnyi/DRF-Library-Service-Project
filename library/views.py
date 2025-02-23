@@ -28,5 +28,5 @@ class BorrowingViewSet(mixins.ListModelMixin,
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment
+    queryset = Payment.objects.all()
     serializer_class = BorrowingSerializer
