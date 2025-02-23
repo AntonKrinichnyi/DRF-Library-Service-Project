@@ -9,38 +9,36 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    authors = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field="full_name")
-
     class Meta:
         model = Book
-        fields = ("id",
-                  "title",
-                  "authors",
-                  "cover",
-                  "inventory",
-                  "daily_fee")
+        fields = ("id", "title", "authors", "cover", "inventory", "daily_fee")
+
+
+class BookListSerializer(BookSerializer):
+    authors = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="full_name"
+    )
+    
+    class Meta:
+        model: Book
+        fields = ("id", "title", "authors", "cover", "inventory", "daily_fee")
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
-        fields = ("id",
-                  "expected_return_date",
-                  "actual_return_date",
-                  "book",
-                  "user")
+        fields = ("id", "expected_return_date", "actual_return_date", "book", "user")
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ("id",
-                  "status",
-                  "payment_type",
-                  "borrowing_id",
-                  "session_url",
-                  "session_id",
-                  "money_to_pay")
+        fields = (
+            "id",
+            "status",
+            "payment_type",
+            "borrowing_id",
+            "session_url",
+            "session_id",
+            "money_to_pay",
+        )
