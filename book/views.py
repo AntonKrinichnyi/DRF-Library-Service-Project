@@ -1,4 +1,5 @@
 from rest_framework import viewsets, mixins
+from rest_framework.permissions import IsAdminUser
 from book.models import Author, Book
 from book.serializers import AuthorSerializer, BookListSerializer, BookSerializer
 
@@ -8,6 +9,11 @@ class AuthorViewSet(mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    
+    def get_permissions(self):
+        if self.action in ("list", "retrieve"):
+            return []
+        return [IsAdminUser()]
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -25,3 +31,8 @@ class BookViewSet(viewsets.ModelViewSet):
         if self.action in ("list", "retrieve"):
             return BookListSerializer
         return BookSerializer
+    
+    def get_permissions(self):
+        if self.action in ("list", "retrieve"):
+            return []
+        return [IsAdminUser()]
