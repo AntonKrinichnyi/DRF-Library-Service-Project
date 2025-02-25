@@ -108,7 +108,7 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Book has already been returned")
         return super().validate(attrs=attrs)
     
-    def update(self, instance, validated_data):
+    def update(self, instance):
         book = instance.book
         instance.actual_return_date = datetime.now().date()
         instance.save()
