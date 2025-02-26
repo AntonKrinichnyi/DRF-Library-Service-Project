@@ -68,7 +68,7 @@ class BorrowingDetailSerializer(BorrowingSerializer):
         return obj.actual_return_date is None
 
 
-class BorrowCreateSerializer(BorrowingDetailSerializer):
+class BorrowingCreateSerializer(BorrowingDetailSerializer):
     payment = PaymentSerializer(many=False, read_only=True)
 
     class Meta:
