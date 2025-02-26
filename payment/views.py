@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins
-from rest_framework.response import Response
+from django.http import HttpResponse
+import stripe
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from payment.models import Payment
 from payment.serializers import PaymentDetailSerializer, PaymentSerializer
@@ -18,3 +19,16 @@ class PaymentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Retr
         if self.action in ["list", "retrieve"]:
             return [IsAuthenticated()]
         return [IsAdminUser()]
+    
+def payment_succes(request, session_id):
+    stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+    session = stripe.checkout.Session.retrieve(session_id)
+    if session.payment_status == "paid":
+        payment = Payment.objects.get(session_id=session_id)
+        payment.status = "paid"
+        payment.save()
+        return HttpResponse("Payment succesful")
+    return HttpResponse("Payment failed")
+
+def payment_cancel(request):
+    return HttpResponse("Payment canceled")
