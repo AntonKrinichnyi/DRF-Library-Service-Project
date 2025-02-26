@@ -4,6 +4,7 @@ from django.db import transaction
 from rest_framework import status
 from rest_framework.response import Response
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
 from telegram_notificated import send_telegram_notification
 from payment.stripe_payment import create_stripe_session
 from borrowing.models import Borrowing
@@ -17,6 +18,7 @@ from borrowing.serializers import (BorrowingCreateSerializer,
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = (Borrowing.objects.filter(user=self.request.user).
