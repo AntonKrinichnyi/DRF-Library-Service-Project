@@ -21,7 +21,7 @@ class PaymentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Retr
         return [IsAdminUser()]
     
 def payment_succes(request, session_id):
-    stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+    stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc" #TODO: Change this to your stripe secret key
     session = stripe.checkout.Session.retrieve(session_id)
     if session.payment_status == "paid":
         payment = Payment.objects.get(session_id=session_id)
