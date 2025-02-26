@@ -4,7 +4,7 @@ from book.serializers import BookListSerializer
 from borrowing.models import Borrowing
 from payment.serializers import PaymentSerializer
 from django.db import transaction
-from telegram_notificated import send_telegramm_notification
+from telegram_notificated import send_telegram_notification
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -114,7 +114,7 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
         instance.save()
         book.inventory += 1
         book.save()
-        send_telegramm_notification(
+        send_telegram_notification(
             f"Book {book.title} returned by {instance.user.email}"
         )
         return instance

@@ -11,7 +11,7 @@ def calculate_borrowing_price(borrowing):
     num_days = (datetime.now() - borrowing.borrow_date).days
     return borrowing.book.daily_fee * num_days
 
-def create_stripe_sesion(borrowing):
+def create_stripe_session(borrowing):
     total_price = calculate_borrowing_price(borrowing)
     
     session = stripe.checkout.Session.create(

@@ -4,7 +4,7 @@ from django.db import transaction
 from rest_framework import status
 from rest_framework.response import Response
 from datetime import datetime
-from telegram_notificated import send_telegramm_notification
+from telegram_notificated import send_telegram_notification
 from payment.stripe_payment import create_stripe_session
 from borrowing.models import Borrowing
 from borrowing.serializers import (BorrowingCreateSerializer,
@@ -38,7 +38,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             book.inventory -= 1
             book.save()
             serializer.save(user=self.request.user)
-            send_telegramm_notification(
+            send_telegram_notification(
                 f"User {self.request.user.email} borrowed book {book.title}"
             )
             create_stripe_session(serializer.instance)
