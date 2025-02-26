@@ -63,3 +63,4 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             return Response(
                 BorrowingSerializer(borrowing).data, status=status.HTTP_200_OK
             )
+        return Response(status=status.HTTP_400_BAD_REQUEST)
