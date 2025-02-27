@@ -17,10 +17,8 @@ services:
       - redis
       - celery
       - celery-beat
-  
   redis:
     image: redis:latest
-
   db:
     image: postgres:16.0-alpine3.17
     restart: always
