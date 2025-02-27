@@ -47,22 +47,25 @@ class BorrowingViewSet(viewsets.ModelViewSet):
     
     @action(
         detail=True,
-        methods=["post"],
+        methods=["get", "pdate"],
         url_path="return",
-        url_name="return",
         serializer_class=BorrowingReturnSerializer,
     )
     def return_book(self, request, pk=None):
-        borrowing = self.get_object()
-        book = borrowing.book
-        actual_return = datetime.now().date()
-
-        serializer_update = BorrowReturnSerializer(
-            borrowing,
-            context={"request": self.request},
-            data={"actual_return": actual_return},
-            partial=True,
-        )
-        serializer_update.is_valid(raise_exception=True)
-        serializer_update.save()
-        return Response({"status": "borrowing returned"})
+        with transaction.atomic():
+            borrowing = self.get_object()
+            if borrowing.actual_return_date:
+                return Response(
+                    {"error": "Book already returned"},
+                    status=status.HTTP_400_BAD_REQUEST)
+            actual_return_date = datetime.now()
+            update = BorrowingReturnSerializer(
+                borrowing,
+                context={"request": self.request},
+                data={"actual_return_date": actual_return_date},
+                partial=True
+            )
+            update.is_valid(raise_exception=True)
+            update.save()
+            return Response({"success": "Book returned"}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
