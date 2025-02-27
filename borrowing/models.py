@@ -6,10 +6,12 @@ from book.models import Book
 class Borrowing(models.Model):
     borrow_date = models.DateTimeField(auto_now_add=True)
     expected_return_date = models.DateField()
-    actual_return_date = models.DateTimeField(auto_now_add=True,
-                                              blank=True,
-                                              null=True)
-    book = models.ManyToManyField(Book)
+    actual_return_date = models.DateTimeField(blank=True, null=True)
+    book = models.ForeignKey(Book,
+                             on_delete=models.CASCADE,
+                             related_name="borrowings",
+                             blank=True,
+                             null=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )

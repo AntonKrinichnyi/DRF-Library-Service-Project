@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
 from celery.schedules import crontab
@@ -136,9 +137,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user.User"
 
-STRIPE_PUBLISHABLE_KEY = "pk_test_51J3"
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 
-STRIPE_SECRET_KEY = "sk_test_51J3"
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 
 CELERY_BEAT_SCHEDULE = {
     "check-overdue-borrowings-every-morning": {

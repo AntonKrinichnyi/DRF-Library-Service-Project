@@ -1,14 +1,14 @@
 import stripe
 from library_service import settings
 from payment.models import Payment
-from datetime import datetime
+from datetime import datetime, timezone
 
 from telegram_notificated import send_telegram_notification
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def calculate_borrowing_price(borrowing):
-    num_days = (datetime.now() - borrowing.borrow_date).days
+    num_days = (datetime.now(timezone.utc) - borrowing.borrow_date).days
     return borrowing.book.daily_fee * num_days
 
 def create_stripe_session(borrowing):

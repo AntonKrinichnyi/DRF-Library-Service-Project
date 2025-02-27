@@ -22,7 +22,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = (Borrowing.objects.filter(user=self.request.user).
-                    prefetch_related("book__author").select_related("user"))
+                    prefetch_related("book__authors").select_related("user"))
         return queryset
     
     def get_serializer_class(self):
@@ -35,9 +35,9 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         return BorrowingSerializer
     
     def perform_create(self, serializer):
+        book = serializer.validated_data["book"]
         with transaction.atomic():
-            book = serializer.validated_data["book"]
-            book.inventory -= 1
+            book.inventory -= 1    
             book.save()
             serializer.save(user=self.request.user)
             send_telegram_notification(
@@ -53,16 +53,16 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         serializer_class=BorrowingReturnSerializer,
     )
     def return_book(self, request, pk=None):
-        with transaction.atomic():
-            borrowing = self.get_object()
-            borrowing.actual_return_date = datetime.now()
-            borrowing.save()
-            borrowing.book.inventory += 1
-            borrowing.book.save()
-            send_telegramm_notification(
-                f"User {self.request.user.email} returned book {borrowing.book.title}"
-            )
-            return Response(
-                BorrowingSerializer(borrowing).data, status=status.HTTP_200_OK
-            )
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        borrowing = self.get_object()
+        book = borrowing.book
+        actual_return = datetime.now().date()
+
+        serializer_update = BorrowReturnSerializer(
+            borrowing,
+            context={"request": self.request},
+            data={"actual_return": actual_return},
+            partial=True,
+        )
+        serializer_update.is_valid(raise_exception=True)
+        serializer_update.save()
+        return Response({"status": "borrowing returned"})

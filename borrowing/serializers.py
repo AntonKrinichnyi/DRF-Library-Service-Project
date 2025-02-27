@@ -88,7 +88,7 @@ class BorrowingCreateSerializer(BorrowingDetailSerializer):
         return book
 
     def validate_expected_return_date(self, expected_return_date):
-        if expected_return_date < datetime.date.today():
+        if expected_return_date < datetime.now().date():
             raise serializers.ValidationError(
                 "Expected return date must be in the future"
             )
