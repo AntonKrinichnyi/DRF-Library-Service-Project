@@ -1,5 +1,8 @@
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAdminUser
+from drf_spectacular.utils import extend_schema
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.openapi import OpenApiParameter
 from book.models import Author, Book
 from book.serializers import AuthorSerializer, BookListSerializer, BookSerializer
 
@@ -36,3 +39,17 @@ class BookViewSet(viewsets.ModelViewSet):
         if self.action in ("list", "retrieve"):
             return []
         return [IsAdminUser()]
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="title",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="Filter books by title",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

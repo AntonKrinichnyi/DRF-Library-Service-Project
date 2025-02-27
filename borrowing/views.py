@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from django.db import transaction
 from rest_framework import status
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from datetime import datetime
 from rest_framework.permissions import IsAuthenticated
@@ -44,7 +45,13 @@ class BorrowingViewSet(viewsets.ModelViewSet):
                 f"User {self.request.user.email} borrowed book {book.title}"
             )
             create_stripe_session(serializer.instance)
-    
+
+    @extend_schema(
+        request=BorrowingReturnSerializer,
+        responses={200: BorrowingReturnSerializer(many=True)},
+        methods=["POST"],
+        description="Returns a book by its ID.",
+    )
     @action(
         detail=True,
         methods=["get", "pdate"],
