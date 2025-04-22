@@ -1,0 +1,48 @@
+services:
+  library_service:
+    build:
+      context: .
+    env_file:
+      - .env
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis
+      - celery
+      - celery-beat
+  redis:
+    image: redis:latest
+  db:
+    image: postgres:16.0-alpine3.17
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - my_db:$PGDATA
+  celery:
+    build: .
+    command: celery -A library_service worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: .
+    command: celery -A library_service beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+volumes:
+  my_db:
